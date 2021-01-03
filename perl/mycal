@@ -1,0 +1,444 @@
+#!/usr/bin/env perl
+#
+# ¥«¥ì¥ó¥ÀÉ½¼¨¥¹¥¯¥ê¥×¥È
+# 2001.02.01 Initial.
+# version 0.01
+# version 0.02
+# 2001.03.23 version 0.03 ¡Ö¹ñÌ±¤Î½ËÆü¤Ë´Ø¤¹¤ëË¡Î§¡×¡Ê½ËÆüË¡¡Ë¤Î²þÀµÍúÎò¤ËÂÐ±þ
+#            1948 °ÊÁ°¤Ï½ËÆü¤Ê¤·¤È¤·¤¿¡£
+#            »²¹Í¡§ http://list.room.ne.jp/~lawtext/1948L178.html
+#            »²¹Í¡§ http://www2s.biglobe.ne.jp/~law/law/ldb/S23H0178.htm
+#            »²¹Í¡§ http://www.ffortune.net/calen/calen/yomi99/yomi027.htm
+#            ½ñ¤¤¤¿¤¢¤È¤Ç¸«¤Ä¤«¤ë¤ó¤À¤è¤Ê¤¡¡£
+#            http://aglaia.c.u-tokyo.ac.jp/~yamamoto/Script/Calendar/calendar.html
+# 2001.09.26 version 0.04 °ú¿ô»ØÄê¤Ç 0 ¥Ñ¥Ç¥£¥ó¥°¤µ¤ì¤ë¤ÈµÙÆüÈ½Äê¤¬¤Ç¤­¤Ê¤«¤Ã¤¿
+#            ÉÔ¶ñ¹çÂÐ±þ¡Ê»»½Ñ±é»»¤Ë¤è¤ë¿ôÃÍ²½¡Ë¡£
+# 2001.12.12 version 0.05 ¥Ï¥Ã¥Ô¡¼¥Þ¥ó¥Ç¡¼¤Ë´Ø¤·¤Æ¸í²ò¤·¤Æ¤¤¤¿ÉôÊ¬¤Î½¤Àµ¡£
+#            £²½µÌÜ¤Î·îÍË¤Ç¤Ï¤Ê¤¯¡¢£²²óÌÜ¤Î·îÍË¤Ê¤Î¤Í¡£
+# 2001.12.28 version 0.06 ½ÕÊ¬¡¿½©Ê¬¤Î¤¤¤¤¤«¤²¤ó¤Ê·×»»¤Î°Ü¿¢¥Ð¥°½¤Àµ¡£
+# 2003.02.22 version 0.07 ¥Ï¥Ã¥Ô¡¼¥Þ¥ó¥Ç¡¼¤ÎÄÉ²Ã£²¤ÄÊ¬¤ËÂÐ±þ¡£
+# 2005.08.01 version 0.08 ¹ñÌ±¤ÎµÙÆü¤ÎÁý²Ã¡Ê£¹·î¡Ë¤ËÂÐ±þ¡£
+# 2005.08.01 version 0.09 ¿¶ÂØµÙÆü¤ÎÁý²Ã¡Ê£µ·î¡Ë¤ËÂÐ±þ¡£
+# 2014.05.30 version 0.10 »³¤ÎÆü¡Ê£¸·î¡Ë¤ËÂÐ±þ¡£
+# 2016.11.30 version 0.11 £î·î¤Î¥Þ¥ë¥Á¥«¥é¥à½ÐÎÏ¤ËÂÐ±þ¡£
+# 2017.01.01 version 0.11b £î·î¤Î¥Þ¥ë¥Á¥«¥é¥à½ÐÎÏ¤ÎÇ¯¤Þ¤¿¤®¤ÎÉÔÎÉ¤ËÂÐ±þ¡£
+# 2018.02.01 version 0.12 Å·¹ÄÃÂÀ¸Æü¤Î°ÜÆ°¤ËÂÐ±þ¡£
+# 2018.06.26 version 0.13 ¥ª¥ê¥ó¥Ô¥Ã¥¯ÆÃÎã¤ËÂÐ±þ¡£
+# 2018.12.18 version 0.14 2019Ç¯ Å·¹Ä¤ÎÂ¨°Ì µÚ¤Ó Â¨°ÌÎéÀµÅÂ¤Îµ· ¤ËÂÐ±þ¡£
+
+#
+# Bug:
+# ¡¦¥°¥ì¥´¥ê¥ª°ÊÁ°¤ÎÎñ¤ÏÉ½¼¨¤Ç¤­¤Ê¤¤¡£
+# What to do:
+# ¡¦½ËÆü¤Ï¤¤¤Ã¤½¥Õ¥¡¥¤¥ë¤«¤éÆÉ¤à¤è¤¦¤Ë¤¹¤ë¤«¡Ä
+# ¡¦Ã¼Ëö¤Î¥«¥é¥à¿ô¤«¤éÂÅÅö¤Ê·î¥«¥é¥à¿ô¤òµá¤á¤ë¡£
+# ¡¦¡Ö·è¤á¤é¤ì¤¿¥«¥é¥à¿ô¤Î¤Þ¤óÃæ¤¢¤¿¤ê¤Ë½ÐÎÏ¤¹¤ë¡×´Ø¿ô¤¬Íß¤·¤¤¡£
+#
+
+require 5;
+
+# ³Æ¼ïÄêµÁ
+@month_name = (
+    "January",  "February","March",   "April",
+    "May",      "June",    "July",    "August",
+    "September","October", "November","December"
+);
+@week_name = ("Su", "Mo", "Tu", "We", "Th", "Fr", "Sa");
+@day_color = ("red"  ,  # ÆüÍË
+              "black",  # ·îÍË
+              "black",  # ²ÐÍË
+              "black",  # ¿åÍË
+              "black",  # ÌÚÍË
+              "black",  # ¶âÍË
+              "blue" ,  # ÅÚÍË
+              "green"   # º£Æü
+);
+%color_esc = (
+    'black'  ,  '[0m' ,   # ¡Ö¹õ¡×¤Ï 30m ¤À¤¬¤³¤³¤Ç¤ÏÂ°À­²ò½ü¤òÍÑ¤¤¤ë¡£
+    'red'    ,  '[31m' ,
+    'blue'   ,  '[34m' ,
+    'green'  ,  '[32m'
+);
+
+# ÊÑ¿ô¤Î½é´üÀßÄê
+$whitespace = sprintf("%3s"," ");
+($tmp, $tmp, $tmp, $now_day, $now_month, $now_year) = localtime(time);
+$now_month++;
+$now_year += 1900;
+$line_count = 0;
+
+# °ú¿ô¤ÎÊ¬²ò
+if ($#ARGV == -1) { # °ú¿ô¤Ê¤·¤Ï¡¢º£·î
+    $year=$now_year;
+    $start_month = $now_month;
+    $end_month   = $now_month;
+    $month_column=1;
+    $months = 1;
+}
+if ($#ARGV == 0) { # °ú¿ô£±¤Ä¤Ï¡¢Ç¯ ¤Þ¤¿¤Ï £³¥õ·î½ÐÎÏ
+    $year=$ARGV[0];
+    $start_month = 1;
+    $end_month = 12;
+    $months = 12;
+    $month_column = 3;
+    if ($year < 0) {
+        $year = $now_year;
+        $start_month = $now_month - 1;
+        $end_month = $now_month + 1;
+        if ($start_month <= 0) { $year = $now_year - 1; $start_month = 12; }
+        # if ($end_month > 12) { $end_month = 1; }
+        $end_month = $start_month;
+        $months = abs($ARGV[0]);
+        $month_column = $months;
+    }
+}
+if ($#ARGV == 1) { # °ú¿ô£²¤Ä¤Ï ·î¡¢Ç¯
+    $year=$ARGV[1];
+    $start_month = $ARGV[0];
+    $end_month   = $ARGV[0];
+    $month_column = 1;
+    $months = 1;
+}
+
+# ÈÏ°Ï¥Á¥§¥Ã¥¯
+if ($year < 1582) { die "year must be greater then 1582.\n"; }
+if (($year == 1582) && ($start_month <= 10)) {
+    die "too ago.\n";
+}
+if (($start_month < 1) || ($end_month > 12)) {
+    die "month must be in range 1..12.\n";
+}
+
+# clean up args. // 2001.09.26
+$year        = $year + 0;
+$start_month = $start_month + 0;
+$end_month   = $end_month   + 0;
+
+
+# ¥Þ¥ë¥Á¥«¥é¥à½ÐÎÏ¤Î¾ì¹ç¡¢¤³¤³¤ÇÇ¯É½¼¨
+if ($end_month - $start_month != 0) {
+    print "                               $year\n\n";
+}
+
+# ³Æ·î¤Î½ÐÎÏ
+$month = $start_month;
+for ($month_loop = 0; $month_loop < $months; $month_loop++) {
+    $holiday = &get_holidays($year);
+
+    $start_week = &get_wday($year, $month, 1); # Åö·î£±Æü¤ÎÍËÆü
+    $lastday = &days_of_month($year, $month); # Åö·î¤ÎÆü¿ô
+
+    # ·î¤Î¥Ø¥Ã¥À¤ò½ÐÎÏ
+    $month_header = sprintf(" %-16s", $month_name[$month-1]);
+    if (($end_month - $start_month == 0) || ($over_year != 0)) {
+        $month_header = $month_header.sprintf("%4d ", $year);
+    } else {
+        $month_header = $month_header."     ";
+    }
+
+    # ÍËÆü¤Î¥Ø¥Ã¥À¤ò½ÐÎÏ
+    $buff[$line_count]=$buff[$line_count].$month_header;
+    $line_count++;
+    for ($i=0; $i<7; $i++) {
+        $buff[$line_count] = $buff[$line_count]." ".$week_name[$i];
+    }
+    $buff[$line_count] = $buff[$line_count]." ";
+    $line_count++;
+
+    # Æü¤Î½ÐÎÏ
+    $day = 1 - $start_week;    # Åö·îÂè£±½µ¤ÎÆüÍË¤Ë¤¢¤¿¤ëÆü¤«¤é
+    while ($day <= $lastday) { # Åö·î¤Î·îËöÆü¤Þ¤Ç
+        $exchange_holiday = 0; # ¿¶ÂØµÙÆü¥Õ¥é¥°¤Î¥¯¥ê¥¢
+        for ($week = 0; $week < 7; $week++) {
+            # ·î½é¡¦·îËö¤ÎÉ½¼¨°ÌÃÖÄ´À°
+            if (($day < 1) || ($day > $lastday)) {
+                $buff[$line_count]=$buff[$line_count].$whitespace;
+                $day++;
+                next;
+            }
+
+            # Âè²¿½µÌÜ¤«¤ò·×»»
+            $week_count = $line_count - 1;
+            if ( $start_week > 1 ) { $week_count--; }
+
+            # ½ËÆü¥Ï¥Ã¥·¥å¤ÎÊ¸»úÎó¥²¥Ã¥È
+            $h1 = $holiday{"$month\/$day"};
+            $h2 = $holiday{"$month\/$week_count$week_name[$week]"};
+            $h3 = $holiday{"$year\/$month\/$day"};
+            $h = "$h1$h2$h3"; # ½ËÆü¤Ç¤Ê¤¤¤Ê¤é¡Ö""¡×
+
+            # 2003 Ç¯°Ê¹ß¤Ç¡¢½©Ê¬¤ÎÆü¤¬¿åÍË¤Ë¤Ê¤ë½µ¤Î²ÐÍË¡á£¹·î¤Î¡Ö¹ñÌ±¤ÎµÙÆü¡×
+            if (($year >= 2003) && ($month == 9)
+              && (($day == 21) || ($day == 22))
+              && (&get_wday($year,$month,$day) == 2)
+              && (($day + 1) == &get_aeq($year))
+              && ($h == "")) {
+                $h = "¹ñÌ±¤ÎµÙÆü";
+            }
+
+            # ¥Ç¥Õ¥©¥ë¥È¥«¥é¡¼¤ÎÀßÄê
+            $color = $day_color[$week];
+
+            # ¿¶ÂØµÙÆü¤Ê¤é¤ÐÀÖ
+            # 2007 Ç¯°Ê¹ß¡¢¿¶µÙ¥Õ¥é¥°¤¬ ON ¤Ç¡¢¤«¤Ä½ËÆü¤Î¾ì¹ç¤Ï¥Õ¥é¥°¤ò»ý¤Á±Û¤¹
+            if ($exchange_holiday == 1) {
+                $color = "red";
+                if (($year >= 2007) && ($h ne "")) {
+                    $exchange_holiday = 1;
+                } else {
+                    $exchange_holiday = 0;
+                }
+            }
+
+            # ½ËÆü¤Ê¤é¤ÐÀÖ
+            if ($h ne "") {
+                $color = "red";
+                # ½ËÆü¤ÇÆüÍË¤Î¾ì¹ç¤ÏÍâÆü¤Ï¿¶ÂØµÙÆü
+                if (($week == 0) &&
+                    (($year > 1973) || ($year == 1973 && $month > 3))) {
+                    $exchange_holiday = 1;
+                }
+            }
+            # º£Æü¤Ê¤é¤ÐÎÐ
+            if (($year  == $now_year)
+              && ($month == $now_month)
+              && ($day   == $now_day)) {
+                $color = $day_color[7];
+            }
+
+            # ÆüÉÕ¤Î½ÐÎÏ
+            $daystr = sprintf("%3d", $day);
+            if ($color ne "black") {
+                $daystr = $color_esc{$color}.$daystr.$color_esc{"black"};
+            }
+            $buff[$line_count]=$buff[$line_count].$daystr;
+
+            $day++;
+        }
+        # ½µ¤Î½ª¤ï¤ê
+        $buff[$line_count] = $buff[$line_count]." ";
+        $line_count++;
+    }
+    # ·î¤Î½ª¤ï¤ê¤Ï¤Á¤ç¤Ã¤ÈÍ¾Ê¬¤Ë¹Ô¤òºî¤Ã¤Æ¤ª¤¯ -- ¥Þ¥ë¥Á¥«¥é¥àÂÐ±þ
+    for (; $line_count < 9 ; $line_count++) {
+        $buff[$line_count] = $buff[$line_count].sprintf("%22s"," ");
+    }
+    $month_count++;
+
+    # µ¬Äê¤Î¥«¥é¥à¿ô¤Ö¤óÎ¯¤Þ¤Ã¤¿¥Ð¥Ã¥Õ¥¡¤ò½ÐÎÏ
+    if ($month_count % $month_column == 0) {
+        for ($i=0; $i < $line_count; $i++) {
+            if ($buff[$i] !~ /^ [ ]* $/) { # ´°Á´¤Ë¶õÇò¤Ê¹Ô¤Ï½Ð¤µ¤Ê¤¤
+                print $buff[$i]."\n";
+            }
+            $buff[$i]="";
+        }
+        print "\n";                        # ¤½¤Î¤«¤ï¤ê¤³¤³¤Ç²þ¹Ô
+    }
+    $line_count=0;
+
+    $month++;
+    if ($month > 12) {
+        $year++;
+        $month = 1;
+        $over_year = 1;
+    }
+}
+# ½ÐÎÏÈÏ°Ï¤Î½ª¤ï¤ê
+#----------------------------------------
+# main ¤³¤³¤Þ¤Ç¡£
+#----------------------------------------
+
+#----------------------------------------
+# Ì¾¾Î¡§get_wday
+# µ¡Ç½¡§»ØÄêÆü¤ÎÍËÆü¤òÊÖ¤¹¡£
+# °ú¿ô¡§Ç¯¡¢·î¡¢Æü
+# ÌáÃÍ¡§ÍËÆü¡Ê0¡Á6¡Ë
+# È÷¹Í¡§1582 Ç¯ 10 ·î 15 Æü°Ê¹ß¤Ç¤Ê¤¤¤ÈÀµ¤·¤¯Æ°ºî¤·¤Þ¤»¤ó¡£
+#----------------------------------------
+sub get_wday {
+    my ($year, $month, $day) = @_;
+    if (($month == 1) || ($month == 2)) {
+        $year--;
+        $month += 12;
+    }
+    my $ans = int($year + int($year/4) - int($year/100) + int($year/400)
+             + int((13 * $month + 8)/5) + $day) % 7;
+    return $ans;
+}
+
+#----------------------------------------
+# Ì¾¾Î¡§days_of_month
+# µ¡Ç½¡§°ú¿ô¤Ç»ØÄê¤µ¤ì¤¿·î¤ÎÆü¿ô¤òÊÖ¤¹¡£
+# °ú¿ô¡§Ç¯¡¢·î
+# ÌáÃÍ¡§»ØÄê¤µ¤ì¤¿·î¤ÎÆü¿ô
+# È÷¹Í¡§http://alfin.mine.utsunomiya-u.ac.jp/~niy/algo/d/daysOfMonth.html
+#       1582 Ç¯ 10 ·î °Ê¹ß¤Ç¤Ê¤¤¤ÈÆ°ºî¤·¤Þ¤»¤ó¡£
+#----------------------------------------
+sub days_of_month {
+    my ($y, $m) = @_ ;
+    my $ans = 0;
+    my @days = ( 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+    CALC: {
+        if ( $m < 1 || $m > 12) { last CALC; }
+        if (( $y < 1582 ) || ( $y == 1582 && $m < 10)) { last CALC; }
+        $ans  = $days[$m];
+        $ans += ($y % 4 == 0 && $y % 100 != 0 || $y % 400 == 0) if $m == 2;
+    }
+    return($ans);
+}
+#----------------------------------------
+# Ì¾¾Î¡§get_equinox
+# µ¡Ç½¡§Æü¤òÊÖ¤¹
+# °ú¿ô¡§Ç¯¡¢Ææ¤Î²¿¤«¡¢Ææ¤Î²¿¤«
+# ÊÖÃÍ¡§Ææ¤ÎÆü
+# È÷¹Í¡§¥×¥é¥¤¥Ù¡¼¥È´Ø¿ô¡Ê¤½¤ó¤Ê¤Î¤Ê¤¤(^^;;¡Ë
+#----------------------------------------
+sub calc_equinox {
+    return int($_[1] + 0.242194 * ($_[0] - 1980) - int(($_[0] - $_[2]) / 4));
+}
+
+#----------------------------------------
+# Ì¾¾Î¡§get_veq
+# µ¡Ç½¡§½ÕÊ¬¤òÊÖ¤¹
+# °ú¿ô¡§Ç¯¡Ê1951 ¡Á 2150 Ç¯¤Ç¤Ê¤¤¤È¥¨¥é¡¼¡Ë
+# ÊÖÃÍ¡§½ÕÊ¬¡¢-1 = error
+# È÷¹Í¡§http://www.kt.rim.or.jp/%7Etadf/ ¤è¤ê¡¢ruby ¤«¤é perl ¤Ë°Ü¿¢
+#----------------------------------------
+sub get_veq {
+    my $y=$_[0];
+    my $a=0;
+    my $b=0;
+    if ( $y <= 1850 ) { return -1; }
+    if ( $y >  2150 ) { return -1; }
+    if ( $y <= 2150 ) { $a=21.8510; $b=1980.0; }
+    if ( $y <= 2099 ) { $a=20.8431; $b=1980.0; }
+    if ( $y <= 1979 ) { $a=20.8357; $b=1983.0; }
+    if ( $y <= 1899 ) { $a=19.8277; $b=1983.0; }
+    return &calc_equinox($y, $a, $b);
+}
+
+#----------------------------------------
+# Ì¾¾Î¡§get_aeq
+# µ¡Ç½¡§½©Ê¬¤òÊÖ¤¹
+# °ú¿ô¡§Ç¯¡Ê1951 ¡Á 2150 Ç¯¤Ç¤Ê¤¤¤È¥¨¥é¡¼¡Ë
+# ÊÖÃÍ¡§½©Ê¬¡¢-1 = error
+# È÷¹Í¡§http://www.kt.rim.or.jp/%7Etadf/ ¤è¤ê¡¢ruby ¤«¤é perl ¤Ë°Ü¿¢
+#----------------------------------------
+sub get_aeq {
+    my $y=$_[0];
+    my $a=0;
+    my $b=0;
+    if ( $y <= 1850 ) { return -1; }
+    if ( $y >  2150 ) { return -1; }
+    if ( $y <= 2150 ) { $a=24.2488; $b=1980.0; }
+    if ( $y <= 2099 ) { $a=23.2488; $b=1980.0; }
+    if ( $y <= 1979 ) { $a=23.2588; $b=1983.0; }
+    if ( $y <= 1899 ) { $a=22.2588; $b=1983.0; }
+    return &calc_equinox($y, $a, $b);
+}
+
+sub get_holidays {
+  $year = $_[0];
+
+# ½ËÆü¥Æ¡¼¥Ö¥ë¤ÎºîÀ®
+if ($year >= 1948) {
+    %holiday = (                   # since
+        "1/1",      "¸µÆü",        # 1948
+        "1/15",     "À®¿Í¤ÎÆü",    # 1948 (1/15) / 2000 (1/2Mon)
+        "4/29",     "¤ß¤É¤ê¤ÎÆü",  # 1948 (Å·¹ÄÃÂÀ¸Æü) / 1989 (¤ß¤É¤ê¤ÎÆü)
+        "5/3",      "·ûË¡µ­Ç°Æü",  # 1948
+        "5/5",      "¤³¤É¤â¤ÎÆü",  # 1948
+        "11/3",     "Ê¸²½¤ÎÆü",    # 1948
+        "11/23",    "¶ÐÏ«´¶¼Õ¤ÎÆü" # 1948
+    );
+    $veq=&get_veq($year);
+    if ( $veq != -1 ) { $holiday{"$year/3/$veq"}="½ÕÊ¬¤ÎÆü"; }
+    $aeq=&get_aeq($year);
+    if ( $aeq != -1 ) { $holiday{"$year/9/$aeq"}="½©Ê¬¤ÎÆü"; }
+}
+if ($year >= 1966) {
+    $holiday{"9/15"}  = "·ÉÏ·¤ÎÆü";    # 1966/06/25 »Ü¹Ô
+    $holiday{"10/10"} = "ÂÎ°é¤ÎÆü";    # 1966/06/25 »Ü¹Ô
+}
+if ($year >= 1967) {
+    $holiday{"2/11"}  = "·ú¹ñµ­Ç°Æü";  # 1966/12/09 »Ü¹Ô(À¯Îá)
+}
+if ($year >= 1986) {
+    $holiday{"5/4"}   = "¹ñÌ±¤ÎµÙÆü";  # 1985/12/27 »Ü¹Ô
+}
+if ($year >= 1989) {
+    $holiday{"4/29"}  = "¤ß¤É¤ê¤ÎÆü";  # 1989/02/17 »Ü¹Ô
+    $holiday{"12/23"} = "Å·¹ÄÃÂÀ¸Æü";  # 1989/02/17 »Ü¹Ô
+}
+if ($year >= 1996) {
+    $holiday{"7/20"}  = "³¤¤ÎÆü";      # 1996/01/01 »Ü¹Ô
+}
+if ($year >= 2000) {
+    $holiday{"1/15"}   = "";
+    $holiday{"10/10"}  = "";
+    $holiday{"10/2Mo"} = "ÂÎ°é¤ÎÆü";   # 2000/01/01 »Ü¹Ô
+    $holiday{"1/2Mo"}  = "À®¿Í¤ÎÆü";   # 2000/01/01 »Ü¹Ô
+}
+if ($year >= 2003) {
+    $holiday{"7/20"}   = "";
+    $holiday{"9/15"}   = "";
+    $holiday{"7/3Mo"}  = "³¤¤ÎÆü";     # 2001/06/22 ¸øÉÛ 2003/01/01 »Ü¹Ô
+    $holiday{"9/3Mo"}  = "·ÉÏ·¤ÎÆü";   # 2001/06/22 ¸øÉÛ 2003/01/01 »Ü¹Ô
+}
+if ($year >= 2007) {
+    $holiday{"4/29"}  = "¾¼ÏÂ¤ÎÆü";    # 2005/05/20 ¸øÉÛ 2007/01/01 »Ü¹Ô
+    $holiday{"5/4"}   = "¤ß¤É¤ê¤ÎÆü";  # 2005/05/20 ¸øÉÛ 2007/01/01 »Ü¹Ô
+}
+if ($year >= 2016) {
+    $holiday{"8/11"}   = "»³¤ÎÆü";     # 2014/05/30 ¸øÉÛ
+}
+if ($year >= 2019) {
+    $holiday{"12/23"}  = "";           # 2017/06/16 ¸øÉÛ 2019/05/01 »Ü¹Ô
+}
+if ($year >= 2020) {
+    $holiday{"2/23"}  = "Å·¹ÄÃÂÀ¸Æü";  # 2017/06/16 ¸øÉÛ 2019/05/01 »Ü¹Ô
+}
+
+# special case
+if ($year == 1959) {
+    $holiday{"4/10"}  = "¹ÄÂÀ»ÒÌÀ¿Î¿Æ²¦¤Î·ëº§¤Îµ·"; # 1959/03/17 ¸øÉÛ¡õ»Ü¹Ô
+}
+if ($year == 1989) {
+    $holiday{"2/24"}  = "¾¼ÏÂÅ·¹Ä¤ÎÂçÁÓ¤ÎÎé";       # 1989/02/17 »Ü¹Ô
+}
+if ($year == 1990) {
+    $holiday{"11/12"}  = "Â¨°ÌÎé¡¡ÀµÅÂ¤Îµ·";        # 1990/06/01 »Ü¹Ô
+}
+if ($year == 1993) {
+    $holiday{"6/9"}  = "¹ÄÂÀ»ÒÆÁ¿Î¿Æ²¦¤Î·ëº§¤Îµ·";  # 1993/04/30 »Ü¹Ô
+}
+if ($year == 2019) {
+    # 2018/12/14 ¸øÉÛ¡õ»Ü¹Ô
+    $holiday{"4/30"}  = "µÙÆü";
+    $holiday{"5/1"}  = "Å·¹Ä¤ÎÂ¨°Ì¤ÎÆü";
+    $holiday{"5/2"}  = "µÙÆü";
+    $holiday{"10/22"}  = "Â¨°ÌÎé¡¡ÀµÅÂ¤Îµ·";
+}
+if ($year == 2020) {
+    # Åìµþ¥ª¥ê¥ó¥Ô¥Ã¥¯¶¥µ»Âç²ñ¡¦Åìµþ¥Ñ¥é¥ê¥ó¥Ô¥Ã¥¯¶¥µ»Âç²ñÆÃÊÌÁ¼ÃÖË¡
+    # 2018/06/20 ¸øÉÛ¡õ»Ü¹Ô
+    $holiday{"7/3Mo"}  = "";
+    $holiday{"8/11"}   = "";
+    $holiday{"10/2Mo"} = "";
+    $holiday{"7/23"}   = "³¤¤ÎÆü";
+    $holiday{"7/24"}   = "¥¹¥Ý¡¼¥Ä¤ÎÆü";
+    $holiday{"8/10"}   = "»³¤ÎÆü";
+}
+if ($year == 2021) {
+    # Åìµþ¥ª¥ê¥ó¥Ô¥Ã¥¯¶¥µ»Âç²ñ¡¦Åìµþ¥Ñ¥é¥ê¥ó¥Ô¥Ã¥¯¶¥µ»Âç²ñÆÃÊÌÁ¼ÃÖË¡ ºÆ
+    # 202x/0x/xx ¸øÉÛ¡õ»Ü¹Ô
+    $holiday{"7/3Mo"}  = "";
+    $holiday{"8/11"}   = "";
+    $holiday{"10/2Mo"} = "";
+    $holiday{"7/22"}   = "³¤¤ÎÆü";
+    $holiday{"7/23"}   = "¥¹¥Ý¡¼¥Ä¤ÎÆü";
+    $holiday{"8/8"}   = "»³¤ÎÆü";
+}
+return %holiday;
+}
